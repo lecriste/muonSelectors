@@ -65,25 +65,47 @@ def getPFNs(lfns):
 studies = {
     'TTbar':{
         'files':[
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D2849502-12C5-E711-8C77-24BE05C6E7C1.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+181D6340-1EC5-E711-98D5-24BE05C68681.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+008E7DB2-33C5-E711-BF25-9CDC714A4690.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D2E5D119-3FC5-E711-B101-E0071B73C630.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+585F37EB-4EC5-E711-98C6-E0071B6CAD10.root'
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D2849502-12C5-E711-8C77-24BE05C6E7C1.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+181D6340-1EC5-E711-98D5-24BE05C68681.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+008E7DB2-33C5-E711-BF25-9CDC714A4690.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D2E5D119-3FC5-E711-B101-E0071B73C630.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+585F37EB-4EC5-E711-98C6-E0071B6CAD10.root'
+            # through AAA
+            #'root://cmsxrootd.fnal.gov//store/relval/CMSSW_9_4_0_pre3/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/D2E5D119-3FC5-E711-B101-E0071B73C630.root',
+            #'root://cmsxrootd.fnal.gov//store/relval/CMSSW_9_4_0_pre3/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/D2849502-12C5-E711-8C77-24BE05C6E7C1.root',
+            #'root://cmsxrootd.fnal.gov//store/relval/CMSSW_9_4_0_pre3/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/585F37EB-4EC5-E711-98C6-E0071B6CAD10.root',
+            #'root://cmsxrootd.fnal.gov//store/relval/CMSSW_9_4_0_pre3/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/181D6340-1EC5-E711-98D5-24BE05C68681.root',
+            #'root://cmsxrootd.fnal.gov//store/relval/CMSSW_9_4_0_pre3/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/008E7DB2-33C5-E711-BF25-9CDC714A4690.root'
+            # on disk
+            'root://cmsxrootd.fnal.gov//store/relval/CMSSW_10_2_2/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/5858CF63-1B9E-E811-B34F-0025905A610C.root',
+            'root://cmsxrootd.fnal.gov//store/relval/CMSSW_10_2_2/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/E666A4CB-A19D-E811-94ED-0025905A60DE.root'
             ],
         'maxBkgEff':0.15,
         'name':'ttbar'
         },
     'QCD + Zmm':{
         'files':[
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+5228FC24-10C5-E711-9B90-E0071B73B6C0.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+FE37E710-28C5-E711-98C6-4C79BA320467.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+2E5505C2-3DC5-E711-BA98-4C79BA180C81.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D817C8EA-4EC5-E711-882C-24BE05C3EC61.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+561435D4-FBC4-E711-82FA-24BE05C626B1.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+82E0EA96-12C5-E711-8045-E0071B693B41.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+80FC1CBE-26C5-E711-8203-4C79BA1810F3.root',
-            '/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+46BE889F-3DC5-E711-B8CB-E0071B695B81.root'
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+5228FC24-10C5-E711-9B90-E0071B73B6C0.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+FE37E710-28C5-E711-98C6-4C79BA320467.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+2E5505C2-3DC5-E711-BA98-4C79BA180C81.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D817C8EA-4EC5-E711-882C-24BE05C3EC61.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+561435D4-FBC4-E711-82FA-24BE05C626B1.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+82E0EA96-12C5-E711-8045-E0071B693B41.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+80FC1CBE-26C5-E711-8203-4C79BA1810F3.root',
+            #'/data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+46BE889F-3DC5-E711-B8CB-E0071B695B81.root'
+            # through AAA
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+5228FC24-10C5-E711-9B90-E0071B73B6C0.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+FE37E710-28C5-E711-98C6-4C79BA320467.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+2E5505C2-3DC5-E711-BA98-4C79BA180C81.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValZMM_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+D817C8EA-4EC5-E711-882C-24BE05C3EC61.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+561435D4-FBC4-E711-82FA-24BE05C626B1.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+82E0EA96-12C5-E711-8045-E0071B693B41.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+80FC1CBE-26C5-E711-8203-4C79BA1810F3.root',
+            #'root://cmsxrootd.fnal.gov//data/dmytro/tmp/store+relval+CMSSW_9_4_0_pre3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+46BE889F-3DC5-E711-B8CB-E0071B695B81.root'
+            # on disk
+            'root://cmsxrootd.fnal.gov//store/relval/CMSSW_10_2_2/RelValZMM_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/0E846746-009E-E811-A436-0025905B8580.root'
+            # more than one file
+            # ?
             ],
         'maxBkgEff':0.015,
         'name':'qcd_zmm'
@@ -144,6 +166,7 @@ for study,info in studies.items():
     print "Number of files: %d" % len(files)
 
     events = Events(files)
+    print "Total number of events: %d" % events.size()
 
     nevents = 0
     nSigTotal = 0
@@ -236,7 +259,7 @@ for study,info in studies.items():
     # loop over events
     for event in events:
         if n_events_limit and nevents>=n_events_limit: break
-        if (nevents+1)%10000==0: print "Event: ",nevents+1
+        if (nevents+1)%10000==0: print "Processing event ",nevents+1
 
         event.getByLabel(muonLabel, muonHandle)
         muons = muonHandle.product()
@@ -244,7 +267,7 @@ for study,info in studies.items():
             if muon.pt()<minPt or muon.pt()>maxPt: continue
             # signal muons
             trueMuon = (muon.simType()==ROOT.reco.MatchedPrimaryMuon)
-            if trueMuon:
+            if trueMuon or nevents%2:
                 nSigTotal += 1
             else:
                 nBkgTotal += 1
@@ -342,6 +365,6 @@ for study,info in studies.items():
 
     c1.Update()
     # path = "/eos/user/d/dmytro/www/plots/94X_ROCs/"
-    path = "94X_ROCs"
+    path = "10_2_2_ROCs"
     print_canvas(c1, info['name'], path)
     # raw_input( ' ... ' )
