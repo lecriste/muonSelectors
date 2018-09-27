@@ -408,6 +408,8 @@ for study,info in studies.items():
 
     canvasTitle = ROOT.TPaveLabel(0.1, 0.92, 0.9, 0.99, study, "NDC")
     canvasTitle.SetFillColor(ROOT.kWhite)
+    canvasTitle.SetBorderSize(1)
+    canvasTitle.SetLineColor(0)
     canvasTitle.Draw();
 
     # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
