@@ -115,6 +115,9 @@ studies = {
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/82E0EA96-12C5-E711-8045-E0071B693B41.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/80FC1CBE-26C5-E711-8203-4C79BA1810F3.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/46BE889F-3DC5-E711-B8CB-E0071B695B81.root'
+                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/8886E4B0-C7C8-E711-9A30-0CC47A4C8EEA.root',
+                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/90C0EB07-F1C7-E711-9DF2-0CC47A4C8F1C.root',
+                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/AA79BD20-4CC8-E711-91F7-0CC47A4C8E5E.root',
                 ],
             '10_2_2':[# on disk 
                 # ZMM
