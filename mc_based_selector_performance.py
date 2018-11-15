@@ -78,14 +78,16 @@ studies = {
                 #'/data/dmytro/tmp/store+relval+CMSSW_'+CMSSW+'+RelValTTbar_13+MINIAODSIM+PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1+10000+585F37EB-4EC5-E711-98C6-E0071B6CAD10.root'
                 # through AAA
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/D2E5D119-3FC5-E711-B101-E0071B73C630.root',
-                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/D2849502-12C5-E711-8C77-24BE05C6E7C1.root',
+                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/D2849502-12C5-E711-8C77-24BE05C6E7C1.root',
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/585F37EB-4EC5-E711-98C6-E0071B6CAD10.root',
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/181D6340-1EC5-E711-98D5-24BE05C68681.root',
-                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/008E7DB2-33C5-E711-BF25-9CDC714A4690.root'
+                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/008E7DB2-33C5-E711-BF25-9CDC714A4690.root'
                 ],
             '10_2_2':[# on disk 
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/5858CF63-1B9E-E811-B34F-0025905A610C.root',
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/E666A4CB-A19D-E811-94ED-0025905A60DE.root'
+                # TTbar
+                # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/5858CF63-1B9E-E811-B34F-0025905A610C.root',
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/E666A4CB-A19D-E811-94ED-0025905A60DE.root'
                 ]
             },
         'maxBkgEff':0.15,
@@ -115,22 +117,27 @@ studies = {
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/82E0EA96-12C5-E711-8045-E0071B693B41.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/80FC1CBE-26C5-E711-8203-4C79BA1810F3.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/10000/46BE889F-3DC5-E711-B8CB-E0071B695B81.root'
-                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/8886E4B0-C7C8-E711-9A30-0CC47A4C8EEA.root',
-                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/90C0EB07-F1C7-E711-9DF2-0CC47A4C8F1C.root',
-                'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/AA79BD20-4CC8-E711-91F7-0CC47A4C8E5E.root',
+                # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work 
+                #'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/8886E4B0-C7C8-E711-9A30-0CC47A4C8EEA.root',
+                #'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/90C0EB07-F1C7-E711-9DF2-0CC47A4C8F1C.root',
+                #'root://'+redirector+'//store/relval/CMSSW_9_4_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_94X_mcRun2_asymptotic_v0_FastSim-v1/10000/AA79BD20-4CC8-E711-91F7-0CC47A4C8E5E.root',
                 ],
             '10_2_2':[# on disk 
                 # ZMM
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValZMM_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/0E846746-009E-E811-A436-0025905B8580.root',
-                # more than one file
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/0EAC5300-9C9D-E811-BE5C-0025905B8580.root',
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/605937C8-869E-E811-A110-0025905A612C.root',
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/FA0C4EAA-689E-E811-A3EA-0025905B85B2.root'
+                # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work 
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValZMM_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/0E846746-009E-E811-A436-0025905B8580.root',
+                # QCD
+                # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/0EAC5300-9C9D-E811-BE5C-0025905B8580.root',
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/605937C8-869E-E811-A110-0025905A612C.root',
+                #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/FA0C4EAA-689E-E811-A3EA-0025905B85B2.root'
                 ],
             '10_2_0':[# on disk 
-                'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/A055C028-C08A-E811-A564-0025905B8576.root',
-                'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/D0721909-4D8B-E811-8811-0CC47A78A3E8.root',
-                'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/8A7EF76C-F689-E811-8B3B-0CC47A7C3424.root'
+                # QCD
+                # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work
+                #'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/A055C028-C08A-E811-A564-0025905B8576.root',
+                #'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/D0721909-4D8B-E811-8811-0CC47A78A3E8.root',
+                #'root://'+redirector+'//store/relval/CMSSW_10_2_0/RelValQCD_FlatPt_15_3000HS_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/8A7EF76C-F689-E811-8B3B-0CC47A7C3424.root'
                 ],
             },
         'maxBkgEff':0.015,
