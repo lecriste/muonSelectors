@@ -146,6 +146,7 @@ studies = {
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/8A7EF76C-F689-E811-8B3B-0CC47A7C3424.root'
                 ],
             '10_3_0_pre4':[
+                # QCD
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/528B2B26-F3B2-8249-A2DE-541D3FEB03F3.root',
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/9860357D-F043-B24E-BD2E-A5B0BEF477AE.root',
                 ],
@@ -161,7 +162,7 @@ minPt = 20
 maxPt = 1e9
 
 n_events_limit = None
-n_events_limit = 10000
+n_events_limit = 10000*2
 
 ROOT.gROOT.SetBatch(True)
 
@@ -201,7 +202,8 @@ def print_canvas(canvas, output_name_without_extention, path):
     canvas.Print("%s/%s.root"%(path,output_name_without_extention))
 
 for study,info in studies.items():
-    print "Processing %s" % study
+    label = CMSSW + ' ' + study
+    print "Processing %s" % label
     title = study
     maxBkgEff = info['maxBkgEff']
     files = info['files'][CMSSW]
@@ -314,8 +316,8 @@ for study,info in studies.items():
         muons = muonHandle.product()
         for muon in muons:
             if muon.pt()<minPt or muon.pt()>maxPt: continue
-            # signal muons
-            trueMuon = (muon.simType()==ROOT.reco.MatchedPrimaryMuon)
+            # signal or background muons
+            trueMuon = (muon.simType() == ROOT.reco.MatchedPrimaryMuon)
             if trueMuon:
                 nSigTotal += 1
             else:
@@ -350,6 +352,13 @@ for study,info in studies.items():
                     else:
                         tkIsoEffBkg[i] += 1
         nevents += 1
+
+    if not nSigTotal:
+        print "WARNING: No signal muons (nSigTotal == %d) for %s" % (nSigTotal, label)
+        continue
+    if not nBkgTotal:
+        print "WARNING: No background muons (nBkgTotal == %d) for %s" % (nBkgTotal, label)
+        continue
 
     for i in range(len(mvaValues)):
         mvaEffSig[i] /= nSigTotal
@@ -437,4 +446,4 @@ for study,info in studies.items():
     print_canvas(c1, info['name'], path)
     # raw_input( ' ... ' )
 
-    print "Finish processing %s\n" % study
+    print "Finish processing %s\n" % label
