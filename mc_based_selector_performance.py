@@ -197,18 +197,21 @@ def tkIsolation(muon):
 def print_canvas(canvas, output_name_without_extention, path):
     if not os.path.exists(path):
         os.makedirs(path)
-    canvas.Print("%s/%s.png"%(path,output_name_without_extention))
-    canvas.Print("%s/%s.pdf"%(path,output_name_without_extention))
-    canvas.Print("%s/%s.root"%(path,output_name_without_extention))
+    canvas.Print("%s/%s.png" % (path,output_name_without_extention))
+    canvas.Print("%s/%s.pdf" % (path,output_name_without_extention))
+    canvas.Print("%s/%s.root"% (path,output_name_without_extention))
 
 for study,info in studies.items():
+    #if not 'bar' in study: continue
     label = CMSSW + ' ' + study
     print "Processing %s" % label
-    title = study
     maxBkgEff = info['maxBkgEff']
     files = info['files'][CMSSW]
 
-    print "Number of files: %d" % len(files)
+    print "Number of input files: %d" % len(files)
+    if not len(files):
+        print "No input files provided for %s" % label
+        continue
 
     events = Events(files)
     totEvents = events.size()
@@ -246,6 +249,12 @@ for study,info in studies.items():
             'marker':20,
             'color':ROOT.kBlack
             },
+        'MvaSoft':{
+            'mask':ROOT.reco.Muon.SoftMvaId,
+            'display':True,
+            'marker':20,
+            'color':ROOT.kBlack
+            },
         'MvaTight':{
             'mask':ROOT.reco.Muon.MvaTight,
             'display':True,
@@ -256,25 +265,25 @@ for study,info in studies.items():
             'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoLoose,
             'display':True,
             'marker':22,
-            'color':ROOT.kBlue
+            'color':ROOT.kBlack
             },
         'Tight ID + Tight PFIso':{
             'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoTight,
             'display':True,
             'marker':22,
-            'color':ROOT.kBlue
+            'color':ROOT.kBlack
             },
         'MediumPrompt ID + Loose TkIso':{
             'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoLoose,
             'display':True,
             'marker':23,
-            'color':ROOT.kRed
+            'color':ROOT.kBlack
             },
         'MediumPrompt ID + Tight TkIso':{
             'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoTight,
             'display':True,
             'marker':23,
-            'color':ROOT.kRed
+            'color':ROOT.kBlack
             },
         }
 
@@ -283,17 +292,24 @@ for study,info in studies.items():
         nBkgSelected[selector] = 0
 
     # array of mva values for the ROC curve
-    # TODO: how do we choose sich values?
+    # np.arange retursn evenly spaced values within a given interval ([start, ]stop, [step, ]dtype=None)
     mvaValues = np.arange(-1.0, 1.0, 0.05)
+    softMvaValues = mvaValues
+    # TODO: how do we choose such values?
     pfIsoValues = np.arange(0.00, 0.40, 0.01)
-    tkIsoValues = np.arange(0.00, 0.40, 0.01)
-    # print mvaValues
+    tkIsoValues = pfIsoValues
 
     mvaEffSig = array( "f" )
     mvaEffBkg = array( "f" )
     for mva in mvaValues:
         mvaEffSig.append(0.0)
         mvaEffBkg.append(0.0)
+
+    softMvaEffSig = array( "f" )
+    softMvaEffBkg = array( "f" )
+    for mva in softMvaValues:
+        softMvaEffSig.append(0.0)
+        softMvaEffBkg.append(0.0)
 
     pfIsoEffSig = array( "f" )
     pfIsoEffBkg = array( "f" )
@@ -322,7 +338,7 @@ for study,info in studies.items():
                 nSigTotal += 1
             else:
                 nBkgTotal += 1
-            for name,selector in selectors.items():
+            for name, selector in selectors.items():
                 passed = muon.passed(selector['mask'])
                 # print "\tpt: %0.1f \t%s" % (muon.pt(),tight)
                 if passed:
@@ -330,6 +346,7 @@ for study,info in studies.items():
                         nSigSelected[name] += 1
                     else:
                         nBkgSelected[name] += 1
+
             for i in range(len(mvaValues)):
                 passed = LeptonMVA(muon,mvaValues[i])
                 if passed:
@@ -337,6 +354,15 @@ for study,info in studies.items():
                         mvaEffSig[i] += 1
                     else:
                         mvaEffBkg[i] += 1
+
+            for i in range(len(softMvaValues)):
+                passed = muon.softMvaValue() > softMvaValues[i]
+                if passed:
+                    if trueMuon:
+                        softMvaEffSig[i] += 1
+                    else:
+                        softMvaEffBkg[i] += 1
+
             for i in range(len(pfIsoValues)):
                 passed = muon.passed(ROOT.reco.Muon.CutBasedIdTight) and (pfIsolation(muon) < pfIsoValues[i])
                 if passed:
@@ -344,6 +370,7 @@ for study,info in studies.items():
                         pfIsoEffSig[i] += 1
                     else:
                         pfIsoEffBkg[i] += 1
+
             for i in range(len(tkIsoValues)):
                 passed = muon.passed(ROOT.reco.Muon.CutBasedIdMediumPrompt) and (tkIsolation(muon) < tkIsoValues[i])
                 if passed:
@@ -352,6 +379,10 @@ for study,info in studies.items():
                     else:
                         tkIsoEffBkg[i] += 1
         nevents += 1
+
+    print "Processed %d events" % nevents
+    print "N signal muons: %d" % (nSigTotal)
+    print "N background muons: %d" % (nBkgTotal)
 
     if not nSigTotal:
         print "WARNING: No signal muons (nSigTotal == %d) for %s" % (nSigTotal, label)
@@ -364,6 +395,10 @@ for study,info in studies.items():
         mvaEffSig[i] /= nSigTotal
         mvaEffBkg[i] /= nBkgTotal
 
+    for i in range(len(softMvaValues)):
+        softMvaEffSig[i] /= nSigTotal
+        softMvaEffBkg[i] /= nBkgTotal
+
     for i in range(len(pfIsoValues)):
         pfIsoEffSig[i] /= nSigTotal
         pfIsoEffBkg[i] /= nBkgTotal
@@ -372,8 +407,10 @@ for study,info in studies.items():
         tkIsoEffSig[i] /= nSigTotal
         tkIsoEffBkg[i] /= nBkgTotal
 
+    effBkgMax = max(mvaEffBkg + softMvaEffBkg + pfIsoEffBkg + tkIsoEffBkg)
     # print mvaEffSig
     # print mvaEffBkg
+    print "Drawing"
 
     c1 = ROOT.TCanvas("c1", "ROC curve example",700,700)
     c1.SetLeftMargin(0.15)
@@ -382,13 +419,20 @@ for study,info in studies.items():
     graphMva = ROOT.TGraph(len(mvaEffSig), mvaEffSig, mvaEffBkg)
     graphMva.SetTitle('LeptonMVA') # see definition of 'passed' for mvaEff
     graphMva.SetMinimum(0.00)
-    graphMva.SetMaximum(maxBkgEff)
+    graphMva.SetMaximum(max(maxBkgEff, 0.02 + effBkgMax))
     graphMva.SetLineColor(ROOT.kMagenta)
     graphMva.SetLineWidth(3)
     graphMva.GetXaxis().SetTitle("Signal efficiency")
     graphMva.GetYaxis().SetTitle("Background efficiency")
     graphMva.Draw("AC")
     graphs.append(graphMva)
+
+    graphSoftMva = ROOT.TGraph(len(softMvaEffSig), softMvaEffSig, softMvaEffBkg)
+    graphSoftMva.SetTitle('SoftMVA') # see definition of 'passed' for softMvaEff
+    graphSoftMva.SetLineColor(ROOT.kGreen)
+    graphSoftMva.SetLineWidth(3)
+    graphSoftMva.Draw("C same")
+    graphs.append(graphSoftMva)
 
     graphPfIso = ROOT.TGraph(len(pfIsoEffSig), pfIsoEffSig, pfIsoEffBkg)
     graphPfIso.SetTitle('TightID + PFIso') # see definition of 'passed' for pfIsoEff
@@ -404,9 +448,6 @@ for study,info in studies.items():
     graphTkIso.Draw("C same")
     graphs.append(graphTkIso)
 
-    print "Processed %d events" % nevents
-    print "N signal muons: %d" % (nSigTotal)
-    print "N background muons: %d" % (nBkgTotal)
     for selector in sorted(selectors):
         print "\t%s" % selector
         effS = float(nSigSelected[selector]) / nSigTotal
