@@ -416,32 +416,33 @@ for study,info in studies.items():
     c1.SetLeftMargin(0.15)
     graphs = []
 
-    graphMva = ROOT.TGraph(len(mvaEffSig), mvaEffSig, mvaEffBkg)
+    graphMva = ROOT.TGraph(len(mvaEffSig), mvaEffBkg, mvaEffSig)
     graphMva.SetTitle('LeptonMVA') # see definition of 'passed' for mvaEff
-    graphMva.SetMinimum(0.00)
-    graphMva.SetMaximum(max(maxBkgEff, 0.02 + effBkgMax))
+    graphMva.SetMaximum(1)
+    #graphMva.SetMaximum(max(maxBkgEff, 0.02 + effBkgMax))
     graphMva.SetLineColor(ROOT.kMagenta)
     graphMva.SetLineWidth(3)
-    graphMva.GetXaxis().SetTitle("Signal efficiency")
-    graphMva.GetYaxis().SetTitle("Background efficiency")
+    graphMva.GetXaxis().SetTitle("Background efficiency")
+    graphMva.GetYaxis().SetTitle("Signal efficiency")
     graphMva.Draw("AC")
+    graphMva.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
     graphs.append(graphMva)
 
-    graphSoftMva = ROOT.TGraph(len(softMvaEffSig), softMvaEffSig, softMvaEffBkg)
+    graphSoftMva = ROOT.TGraph(len(softMvaEffSig), softMvaEffBkg, softMvaEffSig)
     graphSoftMva.SetTitle('SoftMVA') # see definition of 'passed' for softMvaEff
     graphSoftMva.SetLineColor(ROOT.kGreen)
     graphSoftMva.SetLineWidth(3)
     graphSoftMva.Draw("C same")
     graphs.append(graphSoftMva)
 
-    graphPfIso = ROOT.TGraph(len(pfIsoEffSig), pfIsoEffSig, pfIsoEffBkg)
+    graphPfIso = ROOT.TGraph(len(pfIsoEffSig), pfIsoEffBkg, pfIsoEffSig)
     graphPfIso.SetTitle('TightID + PFIso') # see definition of 'passed' for pfIsoEff
     graphPfIso.SetLineColor(ROOT.kBlue)
     graphPfIso.SetLineWidth(3)
     graphPfIso.Draw("C same")
     graphs.append(graphPfIso)
 
-    graphTkIso = ROOT.TGraph(len(tkIsoEffSig), tkIsoEffSig, tkIsoEffBkg)
+    graphTkIso = ROOT.TGraph(len(tkIsoEffSig), tkIsoEffBkg, tkIsoEffSig)
     graphTkIso.SetTitle('MediumPromptID + TkIso') # see definition of 'passed' for tkIsoEff
     graphTkIso.SetLineColor(ROOT.kRed)
     graphTkIso.SetLineWidth(3)
@@ -457,16 +458,16 @@ for study,info in studies.items():
         if selectors[selector]['display']:
             effSigArray = array("f",[effS])
             effBkgArray = array("f",[effB])
-            graph = ROOT.TGraph(len(effSigArray), effSigArray, effBkgArray)
+            graph = ROOT.TGraph(len(effSigArray), effBkgArray, effSigArray)
             graph.SetTitle(selector)
             graph.SetMarkerStyle(selectors[selector]['marker'])
             graph.SetMarkerColor(selectors[selector]['color'])
-            graph.SetMarkerSize(2)
+            graph.SetMarkerSize(1.5)
             graph.Draw("P same")
             graphs.append(graph)
 
     c1.Update()
-    c1.BuildLegend()
+    c1.BuildLegend(0.6, 0.15, 0.95, 0.15+0.025*len(graphs))
 
     #c1.SetTitle(study) # gets overridden by TGraph title
     # still does not work
