@@ -201,6 +201,68 @@ def print_canvas(canvas, output_name_without_extention, path):
     canvas.Print("%s/%s.pdf" % (path,output_name_without_extention))
     canvas.Print("%s/%s.root"% (path,output_name_without_extention))
 
+
+selectors = {
+    'CutBasedIdLoose':{
+        'mask':ROOT.reco.Muon.CutBasedIdLoose,
+        'display':False
+        },
+    'CutBasedIdMediumPrompt':{
+        'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt,
+        'display':False
+        },
+    'CutBasedIdTight':{
+        'mask':ROOT.reco.Muon.CutBasedIdTight,
+        'display':False
+        },
+    'SoftCutBasedId':{
+        'mask':ROOT.reco.Muon.SoftCutBasedId,
+        'display':False
+        },
+    'MVALoose ID':{
+        'mask':ROOT.reco.Muon.MvaLoose,
+        'display':True,
+        'marker':20,
+        'color':ROOT.kBlack
+        },
+    'SoftMVA ID':{
+        'mask':ROOT.reco.Muon.SoftMvaId,
+        'display':True,
+        'marker':20,
+        'color':ROOT.kBlack
+        },
+    'MVATight ID':{
+        'mask':ROOT.reco.Muon.MvaTight,
+        'display':True,
+        'marker':20,
+        'color':ROOT.kBlack
+        },
+    'Tight ID + Loose PFIso':{
+        'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoLoose,
+        'display':True,
+        'marker':22,
+        'color':ROOT.kBlack
+        },
+    'Tight ID + Tight PFIso':{
+        'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoTight,
+        'display':True,
+        'marker':22,
+        'color':ROOT.kBlack
+        },
+    'MediumPrompt ID + Loose TkIso':{
+        'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoLoose,
+        'display':True,
+        'marker':23,
+        'color':ROOT.kBlack
+        },
+    'MediumPrompt ID + Tight TkIso':{
+        'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoTight,
+        'display':True,
+        'marker':23,
+        'color':ROOT.kBlack
+        },
+    }
+
 for study,info in studies.items():
     #if not 'bar' in study: continue
     label = CMSSW + ' ' + study
@@ -226,110 +288,34 @@ for study,info in studies.items():
     nSigSelected = {}
     nBkgTotal = 0
     nBkgSelected = {}
-    selectors = {
-        'CutBasedIdLoose':{
-            'mask':ROOT.reco.Muon.CutBasedIdLoose,
-            'display':False
-            },
-        'CutBasedIdMediumPrompt':{
-            'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt,
-            'display':False
-            },
-        'CutBasedIdTight':{
-            'mask':ROOT.reco.Muon.CutBasedIdTight,
-            'display':False
-            },
-        'SoftCutBasedId':{
-            'mask':ROOT.reco.Muon.SoftCutBasedId,
-            'display':False
-            },
-        'MvaLoose':{
-            'mask':ROOT.reco.Muon.MvaLoose,
-            'display':True,
-            'marker':20,
-            'color':ROOT.kBlack
-            },
-        'MvaSoft':{
-            'mask':ROOT.reco.Muon.SoftMvaId,
-            'display':True,
-            'marker':20,
-            'color':ROOT.kBlack
-            },
-        'MvaTight':{
-            'mask':ROOT.reco.Muon.MvaTight,
-            'display':True,
-            'marker':20,
-            'color':ROOT.kBlack
-            },
-        'Tight ID + Loose PFIso':{
-            'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoLoose,
-            'display':True,
-            'marker':22,
-            'color':ROOT.kBlack
-            },
-        'Tight ID + Tight PFIso':{
-            'mask':ROOT.reco.Muon.CutBasedIdTight|ROOT.reco.Muon.PFIsoTight,
-            'display':True,
-            'marker':22,
-            'color':ROOT.kBlack
-            },
-        'MediumPrompt ID + Loose TkIso':{
-            'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoLoose,
-            'display':True,
-            'marker':23,
-            'color':ROOT.kBlack
-            },
-        'MediumPrompt ID + Tight TkIso':{
-            'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt|ROOT.reco.Muon.TkIsoTight,
-            'display':True,
-            'marker':23,
-            'color':ROOT.kBlack
-            },
-        }
 
     for selector in selectors:
         nSigSelected[selector] = 0
         nBkgSelected[selector] = 0
 
-    # array of mva values for the ROC curve
+    # Define ROC curves
+    ROC = {}
+    # arrays of mva values for the ROC curves
     # np.arange retursn evenly spaced values within a given interval ([start, ]stop, [step, ]dtype=None)
-    mvaValues = np.arange(-1.0, 1.0, 0.05)
-    softMvaValues = mvaValues
+    ROC['LeptonMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
+    ROC['SoftMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
     # TODO: how do we choose such values?
-    pfIsoValues = np.arange(0.00, 0.40, 0.01)
-    tkIsoValues = pfIsoValues
+    ROC['TightID + PFIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
+    ROC['MediumPromptID + TkIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
 
-    mvaEffSig = array( "f" )
-    mvaEffBkg = array( "f" )
-    for mva in mvaValues:
-        mvaEffSig.append(0.0)
-        mvaEffBkg.append(0.0)
+    for iROC in ROC.values():
+        iROC['effSig'] = np.zeros(len(iROC['values']), dtype=float)
+        iROC['effBkg'] = np.zeros(len(iROC['values']), dtype=float)
 
-    softMvaEffSig = array( "f" )
-    softMvaEffBkg = array( "f" )
-    for mva in softMvaValues:
-        softMvaEffSig.append(0.0)
-        softMvaEffBkg.append(0.0)
 
-    pfIsoEffSig = array( "f" )
-    pfIsoEffBkg = array( "f" )
-    for pfIso in pfIsoValues:
-        pfIsoEffSig.append(0.0)
-        pfIsoEffBkg.append(0.0)
-
-    tkIsoEffSig = array( "f" )
-    tkIsoEffBkg = array( "f" )
-    for tkIso in tkIsoValues:
-        tkIsoEffSig.append(0.0)
-        tkIsoEffBkg.append(0.0)
-
-    # loop over events
+    # Loop over events
     for event in events:
         if nevents >= maxEvents: break
         if (nevents+1) % max(1,maxEvents/10) == 0: print "Processing event", nevents+1
 
         event.getByLabel(muonLabel, muonHandle)
         muons = muonHandle.product()
+        # Loop over muons
         for muon in muons:
             if muon.pt()<minPt or muon.pt()>maxPt: continue
             # signal or background muons
@@ -338,6 +324,8 @@ for study,info in studies.items():
                 nSigTotal += 1
             else:
                 nBkgTotal += 1
+
+            # Evaluate selectors
             for name, selector in selectors.items():
                 passed = muon.passed(selector['mask'])
                 # print "\tpt: %0.1f \t%s" % (muon.pt(),tight)
@@ -347,37 +335,25 @@ for study,info in studies.items():
                     else:
                         nBkgSelected[name] += 1
 
-            for i in range(len(mvaValues)):
-                passed = LeptonMVA(muon,mvaValues[i])
-                if passed:
-                    if trueMuon:
-                        mvaEffSig[i] += 1
-                    else:
-                        mvaEffBkg[i] += 1
+            # Evaluate ROCs
+            for name,iROC in ROC.items():
+                for i in range(len(iROC['values'])):
+                    passed = False
+                    if name == 'LeptonMVA':
+                        passed = LeptonMVA(muon,iROC['values'][i])
+                    elif name == 'SoftMVA':
+                        passed = muon.softMvaValue() > iROC['values'][i]
+                    elif name == 'TightID + PFIso':
+                        passed = muon.passed(ROOT.reco.Muon.CutBasedIdTight) and (pfIsolation(muon) < iROC['values'][i])
+                    elif name == 'MediumPromptID + TkIso':
+                        passed = muon.passed(ROOT.reco.Muon.CutBasedIdMediumPrompt) and (tkIsolation(muon) < iROC['values'][i])
 
-            for i in range(len(softMvaValues)):
-                passed = muon.softMvaValue() > softMvaValues[i]
-                if passed:
-                    if trueMuon:
-                        softMvaEffSig[i] += 1
-                    else:
-                        softMvaEffBkg[i] += 1
+                    if passed:
+                        if trueMuon:
+                            iROC['effSig'][i] += 1
+                        else:
+                            iROC['effBkg'][i] += 1
 
-            for i in range(len(pfIsoValues)):
-                passed = muon.passed(ROOT.reco.Muon.CutBasedIdTight) and (pfIsolation(muon) < pfIsoValues[i])
-                if passed:
-                    if trueMuon:
-                        pfIsoEffSig[i] += 1
-                    else:
-                        pfIsoEffBkg[i] += 1
-
-            for i in range(len(tkIsoValues)):
-                passed = muon.passed(ROOT.reco.Muon.CutBasedIdMediumPrompt) and (tkIsolation(muon) < tkIsoValues[i])
-                if passed:
-                    if trueMuon:
-                        tkIsoEffSig[i] += 1
-                    else:
-                        tkIsoEffBkg[i] += 1
         nevents += 1
 
     print "Processed %d events" % nevents
@@ -391,63 +367,41 @@ for study,info in studies.items():
         print "WARNING: No background muons (nBkgTotal == %d) for %s" % (nBkgTotal, label)
         continue
 
-    for i in range(len(mvaValues)):
-        mvaEffSig[i] /= nSigTotal
-        mvaEffBkg[i] /= nBkgTotal
+    allEffBkg = np.empty(0)
+    # Normalization
+    for name, iROC in ROC.items():
+        iROC['effSig'] /= nSigTotal
+        iROC['effBkg'] /= nBkgTotal
 
-    for i in range(len(softMvaValues)):
-        softMvaEffSig[i] /= nSigTotal
-        softMvaEffBkg[i] /= nBkgTotal
+        allEffBkg = np.append(allEffBkg, np.amax(iROC['effBkg']) )
 
-    for i in range(len(pfIsoValues)):
-        pfIsoEffSig[i] /= nSigTotal
-        pfIsoEffBkg[i] /= nBkgTotal
+    effBkgMax = np.amax(allEffBkg)
+    print "\nDrawing"
 
-    for i in range(len(tkIsoValues)):
-        tkIsoEffSig[i] /= nSigTotal
-        tkIsoEffBkg[i] /= nBkgTotal
-
-    effBkgMax = max(mvaEffBkg + softMvaEffBkg + pfIsoEffBkg + tkIsoEffBkg)
-    # print mvaEffSig
-    # print mvaEffBkg
-    print "Drawing"
-
-    c1 = ROOT.TCanvas("c1", "ROC curve example",700,700)
+    c1 = ROOT.TCanvas("c1", "ROC curve", 700,700)
     c1.SetLeftMargin(0.15)
     graphs = []
 
-    graphMva = ROOT.TGraph(len(mvaEffSig), mvaEffBkg, mvaEffSig)
-    graphMva.SetTitle('LeptonMVA') # see definition of 'passed' for mvaEff
-    graphMva.SetMaximum(1)
-    #graphMva.SetMaximum(max(maxBkgEff, 0.02 + effBkgMax))
-    graphMva.SetLineColor(ROOT.kMagenta)
-    graphMva.SetLineWidth(3)
-    graphMva.GetXaxis().SetTitle("Background efficiency")
-    graphMva.GetYaxis().SetTitle("Signal efficiency")
-    graphMva.Draw("AC")
-    graphMva.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
-    graphs.append(graphMva)
-
-    graphSoftMva = ROOT.TGraph(len(softMvaEffSig), softMvaEffBkg, softMvaEffSig)
-    graphSoftMva.SetTitle('SoftMVA') # see definition of 'passed' for softMvaEff
-    graphSoftMva.SetLineColor(ROOT.kGreen)
-    graphSoftMva.SetLineWidth(3)
-    graphSoftMva.Draw("C same")
-    graphs.append(graphSoftMva)
-
-    graphPfIso = ROOT.TGraph(len(pfIsoEffSig), pfIsoEffBkg, pfIsoEffSig)
-    graphPfIso.SetTitle('TightID + PFIso') # see definition of 'passed' for pfIsoEff
-    graphPfIso.SetLineColor(ROOT.kBlue)
-    graphPfIso.SetLineWidth(3)
-    graphPfIso.Draw("C same")
-    graphs.append(graphPfIso)
-
-    graphTkIso = ROOT.TGraph(len(tkIsoEffSig), tkIsoEffBkg, tkIsoEffSig)
-    graphTkIso.SetTitle('MediumPromptID + TkIso') # see definition of 'passed' for tkIsoEff
-    graphTkIso.SetLineColor(ROOT.kRed)
-    graphTkIso.SetLineWidth(3)
-    graphTkIso.Draw("C same")
-    graphs.append(graphTkIso)
+    # ROC graphs
+    nGraph = 0
+    colorOffset = ROOT.kBlack
+    for name,iROC in ROC.items():
+        nGraph += 1
+        color = colorOffset + nGraph
+        if color >= (ROOT.kYellow/100 +1): color += 1
+        graph = ROOT.TGraph(len(iROC['values']), iROC['effBkg'], iROC['effSig'])
+        graph.SetTitle(name) # see definition of 'passed'
+        graph.SetLineColor(color)
+        graph.SetLineWidth(3)
+        if nGraph == 1:
+            graph.SetMaximum(1)
+            graph.Draw("AC")
+            graph.GetXaxis().SetTitle("Background efficiency")
+            graph.GetYaxis().SetTitle("Signal efficiency")
+            graph.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
+        else:
+            graph.Draw("C same")
+        graphs.append(graph)
 
     for selector in sorted(selectors):
         print "\t%s" % selector
@@ -455,6 +409,7 @@ for study,info in studies.items():
         effB = float(nBkgSelected[selector]) / nBkgTotal
         print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[selector],100.*effS)
         print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[selector],100.*effB)
+        # Single point graphs
         if selectors[selector]['display']:
             effSigArray = array("f",[effS])
             effBkgArray = array("f",[effB])
@@ -467,7 +422,10 @@ for study,info in studies.items():
             graphs.append(graph)
 
     c1.Update()
-    c1.BuildLegend(0.6, 0.15, 0.95, 0.15+0.025*len(graphs))
+
+    legY1 = 0.15
+    legLine = 0.025
+    c1.BuildLegend(0.6, legY1, 0.95, legY1 + legLine*len(graphs))
 
     #c1.SetTitle(study) # gets overridden by TGraph title
     # still does not work
