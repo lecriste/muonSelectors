@@ -158,12 +158,6 @@ studies = {
 
 muonHandle, muonLabel = Handle("std::vector<pat::Muon>"), "slimmedMuons"
 
-minPt = 20
-maxPt = 1e9
-
-n_events_limit = None
-n_events_limit = 10000*2
-
 ROOT.gROOT.SetBatch(True)
 
 ##
@@ -263,14 +257,24 @@ selectors = {
         },
     }
 
+minPt = 4
+maxPt = 1e9
+minEta = -1.4
+maxEta = -minEta
+
+n_events_limit = None
+n_events_limit = 10000*2
+
 for study,info in studies.items():
     #if not 'bar' in study: continue
     label = CMSSW + ' ' + study
-    print "Processing %s" % label
+    print "\nProcessing %s with" % label
+    print "%.2f\t< pT(muon) [GeV]\t< %.2f" % (minPt, maxPt)
+    print "%.2f\t< eta(muon)\t\t< %.2f" % (minEta, maxEta)
+
     maxBkgEff = info['maxBkgEff']
     files = info['files'][CMSSW]
-
-    print "Number of input files: %d" % len(files)
+    print "\nNumber of input files: %d" % len(files)
     if not len(files):
         print "No input files provided for %s" % label
         continue
@@ -317,7 +321,11 @@ for study,info in studies.items():
         muons = muonHandle.product()
         # Loop over muons
         for muon in muons:
+
+            # Preselection
             if muon.pt()<minPt or muon.pt()>maxPt: continue
+            if muon.eta()<minEta or muon.eta()>maxEta: continue
+
             # signal or background muons
             trueMuon = (muon.simType() == ROOT.reco.MatchedPrimaryMuon)
             if trueMuon:
@@ -376,7 +384,7 @@ for study,info in studies.items():
         allEffBkg = np.append(allEffBkg, np.amax(iROC['effBkg']) )
 
     effBkgMax = np.amax(allEffBkg)
-    print "\nDrawing"
+    print "\nDrawing graphs"
 
     c1 = ROOT.TCanvas("c1", "ROC curve", 700,700)
     c1.SetLeftMargin(0.15)
@@ -388,6 +396,7 @@ for study,info in studies.items():
     for name,iROC in ROC.items():
         nGraph += 1
         color = colorOffset + nGraph
+        # apparently yellow is not kYellow but kYellow/100 +1
         if color >= (ROOT.kYellow/100 +1): color += 1
         graph = ROOT.TGraph(len(iROC['values']), iROC['effBkg'], iROC['effSig'])
         graph.SetTitle(name) # see definition of 'passed'
@@ -403,13 +412,10 @@ for study,info in studies.items():
             graph.Draw("C same")
         graphs.append(graph)
 
+    # Single point graphs
     for selector in sorted(selectors):
-        print "\t%s" % selector
         effS = float(nSigSelected[selector]) / nSigTotal
         effB = float(nBkgSelected[selector]) / nBkgTotal
-        print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[selector],100.*effS)
-        print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[selector],100.*effB)
-        # Single point graphs
         if selectors[selector]['display']:
             effSigArray = array("f",[effS])
             effBkgArray = array("f",[effB])
@@ -421,11 +427,15 @@ for study,info in studies.items():
             graph.Draw("P same")
             graphs.append(graph)
 
+        print "\t%s" % selector
+        print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[selector],100.*effS)
+        print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[selector],100.*effB)
+
     c1.Update()
 
     legY1 = 0.15
-    legLine = 0.025
-    c1.BuildLegend(0.6, legY1, 0.95, legY1 + legLine*len(graphs))
+    legLine = 0.03
+    c1.BuildLegend(0.5, legY1, 0.95, legY1 + legLine*len(graphs))
 
     #c1.SetTitle(study) # gets overridden by TGraph title
     # still does not work
