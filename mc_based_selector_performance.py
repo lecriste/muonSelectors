@@ -195,8 +195,10 @@ def print_canvas(canvas, output_name_without_extention, path):
     canvas.Print("%s/%s.pdf" % (path,output_name_without_extention))
     canvas.Print("%s/%s.root"% (path,output_name_without_extention))
 
-
+# https://github.com/cms-sw/cmssw/blob/387393ddf3bc9ff50c532bb1dec288f180e64796/DataFormats/MuonReco/interface/MuonSimInfo.h#L31
 muonSimTypes = {'MatchedPrimaryMuon': 4, 'MatchedMuonFromHeavyFlavour': 3}
+extendedMuonSimType = {'MatchedMuonFromB': 8}
+muonSimTypes.update(extendedMuonSimType)
 
 selectors = {
     'CutBasedIdLoose':{
@@ -334,12 +336,10 @@ for study,info in studies.items():
             if muon.pt()<minPt or muon.pt()>maxPt: continue
             if muon.eta()<minEta or muon.eta()>maxEta: continue
 
-            # signal or background muons
-            trueMuon = (muon.simType() == ROOT.reco.MatchedPrimaryMuon)
-
-
             for muonSimType in muonSimTypes:
-                trueMuon = (muon.simType() == muonSimTypes[muonSimType])
+                simType = muon.simType() if muonSimTypes[muonSimType] < 5 else muon.simExtType()
+                # signal or background muons
+                trueMuon = (simType == muonSimTypes[muonSimType])
                 if trueMuon:
                     nSigTotal[muonSimType] += 1
                 else:
@@ -445,7 +445,7 @@ for study,info in studies.items():
                 graph.Draw("P same")
                 graphs.append(graph)
 
-            print "\t%s" % selector
+            print "\t\n%s for %s" % (selector, muonSimType)
             print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[muonSimType][selector],100.*effS)
             print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[muonSimType][selector],100.*effB)
 
