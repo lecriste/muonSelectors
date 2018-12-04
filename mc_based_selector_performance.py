@@ -261,26 +261,23 @@ selectors = {
         },
     }
 
-minPt = 4
-maxPt = 1e9
-minEta = -1.4
-maxEta = -minEta
+bigNumber = 1e9
+preSelection = {'BPH-16-004':{'minPt':4.0, 'maxPt':bigNumber, 'minEta':-1.4, 'maxEta':1.4},
+                'BPH-18-002':{'minPt':2.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4}}
 
 n_events_limit = None
 n_events_limit = 10000*2
 
 for study,info in studies.items():
     #if not 'bar' in study: continue
-    label = CMSSW + ' ' + study
-    print "\nProcessing %s with" % label
-    print "%.2f\t< pT(muon) [GeV]\t< %.2f" % (minPt, maxPt)
-    print "%.2f\t< eta(muon)\t\t< %.2f"    % (minEta, maxEta)
+    dataset = CMSSW + ' ' + study
+    print "\nProcessing %s" % dataset
 
     maxBkgEff = info['maxBkgEff']
     files = info['files'][CMSSW]
     print "\nNumber of input files: %d" % len(files)
     if not len(files):
-        print "No input files provided for %s" % label
+        print "No input files provided for %s" % dataset
         continue
 
     events = Events(files)
@@ -291,187 +288,196 @@ for study,info in studies.items():
         maxEvents = n_events_limit
     print "\nWill process %d events" % maxEvents
 
-    nevents = 0
-    nSigTotal = {}
-    nSigSelected = {}
-    nBkgTotal = {}
-    nBkgSelected = {}
-    ROC = {}
 
-    for muonSimType in muonSimTypes:
-        # Define ROC curves
-        ROC[muonSimType] = {}
-        # arrays of mva values for the ROC curves
-        # np.arange retursn evenly spaced values within a given interval ([start, ]stop, [step, ]dtype=None)
-        ROC[muonSimType]['LeptonMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
-        ROC[muonSimType]['SoftMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
-        # TODO: how do we choose such values?
-        ROC[muonSimType]['TightID + PFIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
-        ROC[muonSimType]['MediumPromptID + TkIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
-        for iROC in ROC[muonSimType].values():
-            iROC['effSig'] = np.zeros(len(iROC['values']), dtype=float)
-            iROC['effBkg'] = np.zeros(len(iROC['values']), dtype=float)
+    for analysis,cuts in preSelection.items():
+        label = analysis + ' from ' + CMSSW + ' ' + study
 
-        # Define graphs
-        nSigTotal[muonSimType] = 0
-        nBkgTotal[muonSimType] = 0
-        nSigSelected[muonSimType] = {}
-        nBkgSelected[muonSimType] = {}
-        for selector in selectors:
-            nSigSelected[muonSimType][selector] = 0
-            nBkgSelected[muonSimType][selector] = 0
+        print "\nProcessing %s with %s pre-selection:" % (dataset, analysis)
+        print "%.2f\t< pT(muon) [GeV]\t< %.2f" % (cuts['minPt'],  cuts['maxPt'])
+        print "%.2f\t< eta(muon)\t\t< %.2f"    % (cuts['minEta'], cuts['maxEta'])
 
-
-    # Loop over events
-    for event in events:
-        if nevents >= maxEvents: break
-        if (nevents+1) % max(1,maxEvents/10) == 0: print "Processing event", nevents+1
-
-        event.getByLabel(muonLabel, muonHandle)
-        muons = muonHandle.product()
-        # Loop over muons
-        for muon in muons:
-
-            # Preselection
-            if muon.pt()<minPt or muon.pt()>maxPt: continue
-            if muon.eta()<minEta or muon.eta()>maxEta: continue
-
-            for muonSimType in muonSimTypes:
-                simType = muon.simType() if muonSimTypes[muonSimType] < 5 else muon.simExtType()
-                # signal or background muons
-                trueMuon = (simType == muonSimTypes[muonSimType])
-                if trueMuon:
-                    nSigTotal[muonSimType] += 1
-                else:
-                    nBkgTotal[muonSimType] += 1
-
-                # Evaluate selectors
-                for name, selector in selectors.items():
-                    passed = muon.passed(selector['mask'])
-                    if passed:
-                        if trueMuon:
-                            nSigSelected[muonSimType][name] += 1
-                        else:
-                            nBkgSelected[muonSimType][name] += 1
-
-                # Evaluate ROCs
-                for name,iROC in ROC[muonSimType].items():
-                    for i in range(len(iROC['values'])):
-                        passed = False
-                        if name == 'LeptonMVA':
-                            passed = LeptonMVA(muon,iROC['values'][i])
-                        elif name == 'SoftMVA':
-                            passed = muon.softMvaValue() > iROC['values'][i]
-                        elif name == 'TightID + PFIso':
-                            passed = muon.passed(ROOT.reco.Muon.CutBasedIdTight) and (pfIsolation(muon) < iROC['values'][i])
-                        elif name == 'MediumPromptID + TkIso':
-                            passed = muon.passed(ROOT.reco.Muon.CutBasedIdMediumPrompt) and (tkIsolation(muon) < iROC['values'][i])
-
+        nevents = 0
+        nSigTotal = {}
+        nSigSelected = {}
+        nBkgTotal = {}
+        nBkgSelected = {}
+        ROC = {}
+    
+        for muonSimType in muonSimTypes:
+            # Define ROC curves
+            ROC[muonSimType] = {}
+            # arrays of mva values for the ROC curves
+            # np.arange retursn evenly spaced values within a given interval ([start, ]stop, [step, ]dtype=None)
+            ROC[muonSimType]['LeptonMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
+            ROC[muonSimType]['SoftMVA'] = {'values':np.arange(-1.0, 1.0, 0.05)}
+            # TODO: how do we choose such values?
+            ROC[muonSimType]['TightID + PFIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
+            ROC[muonSimType]['MediumPromptID + TkIso'] = {'values':np.arange(0.00, 0.40, 0.01)}
+            for iROC in ROC[muonSimType].values():
+                iROC['effSig'] = np.zeros(len(iROC['values']), dtype=float)
+                iROC['effBkg'] = np.zeros(len(iROC['values']), dtype=float)
+    
+            # Define graphs
+            nSigTotal[muonSimType] = 0
+            nBkgTotal[muonSimType] = 0
+            nSigSelected[muonSimType] = {}
+            nBkgSelected[muonSimType] = {}
+            for selector in selectors:
+                nSigSelected[muonSimType][selector] = 0
+                nBkgSelected[muonSimType][selector] = 0
+    
+    
+        # Loop over events
+        events.toBegin()
+        for event in events:
+            if nevents >= maxEvents: break
+            if (nevents+1) % max(1,maxEvents/10) == 0: print "Processing event", nevents+1
+    
+            event.getByLabel(muonLabel, muonHandle)
+            muons = muonHandle.product()
+            # Loop over muons
+            for muon in muons:
+    
+                # Pre-selection
+                if muon.pt()  < cuts['minPt']  or muon.pt()  > cuts['maxPt'] : continue
+                if muon.eta() < cuts['minEta'] or muon.eta() > cuts['maxEta']: continue
+    
+                for muonSimType in muonSimTypes:
+                    simType = muon.simType() if muonSimTypes[muonSimType] < 5 else muon.simExtType()
+                    # signal or background muons
+                    trueMuon = (simType == muonSimTypes[muonSimType])
+                    if trueMuon:
+                        nSigTotal[muonSimType] += 1
+                    else:
+                        nBkgTotal[muonSimType] += 1
+    
+                    # Evaluate selectors
+                    for name, selector in selectors.items():
+                        passed = muon.passed(selector['mask'])
                         if passed:
                             if trueMuon:
-                                iROC['effSig'][i] += 1
+                                nSigSelected[muonSimType][name] += 1
                             else:
-                                iROC['effBkg'][i] += 1
-
-        nevents += 1
-
-    print "Processed %d events" % nevents
-
-    allEffBkg = np.empty(0)
-    for muonSimType in muonSimTypes:
-        print "N signal (%s) muons: %d" % (muonSimType, nSigTotal[muonSimType])
-        print "N background muons: %d" % (nBkgTotal[muonSimType])
-
-        if not nSigTotal[muonSimType]:
-            print "WARNING: No signal (%s) muons (nSigTotal == %d) for %s" % (muonSimType, nSigTotal[muonSimType], label)
-            continue
-        if not nBkgTotal[muonSimType]:
-            print "WARNING: No background muons (nBkgTotal == %d) for %s" % (nBkgTotal[muonSimType], label)
-            continue
-
-        # Normalization
-        for name, iROC in ROC[muonSimType].items():
-            iROC['effSig'] /= nSigTotal[muonSimType]
-            iROC['effBkg'] /= nBkgTotal[muonSimType]
-
-            allEffBkg = np.append(allEffBkg, np.amax(iROC['effBkg']) )
-
-    effBkgMax = np.amax(allEffBkg)
-    print "\nDrawing graphs"
-
-    c1 = ROOT.TCanvas("c1", "ROC curve", 700,700)
-    c1.SetLeftMargin(0.15)
-
-    colorOffset = ROOT.kBlack
-
-    for muonSimType in muonSimTypes:
-        c1.Clear()
-        graphs = []
-
-        # ROC graphs
-        nGraph = 0
-        for name,iROC in ROC[muonSimType].items():
-            nGraph += 1
-            color = colorOffset + nGraph
-            # apparently yellow is not kYellow but kYellow/100 +1
-            if color >= (ROOT.kYellow/100 +1): color += 1
-            graph = ROOT.TGraph(len(iROC['values']), iROC['effBkg'], iROC['effSig'])
-            graph.SetTitle(name) # see definition of 'passed'
-            graph.SetLineColor(color)
-            graph.SetLineWidth(3)
-            if nGraph == 1:
-                graph.SetMinimum(0)
-                graph.SetMaximum(1)
-                graph.Draw("AC")
-                graph.GetXaxis().SetTitle("Background efficiency")
-                graph.GetYaxis().SetTitle("Signal ("+muonSimType+") efficiency")
-                graph.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
-            else:
-                graph.Draw("C same")
-            graphs.append(graph)
-
-        # Single point graphs
-        for selector in sorted(selectors):
-            effS = float(nSigSelected[muonSimType][selector]) / nSigTotal[muonSimType]
-            effB = float(nBkgSelected[muonSimType][selector]) / nBkgTotal[muonSimType]
-            if selectors[selector]['display']:
-                effSigArray = array("f",[effS])
-                effBkgArray = array("f",[effB])
-                graph = ROOT.TGraph(len(effSigArray), effBkgArray, effSigArray)
-                graph.SetTitle(selector)
-                graph.SetMarkerStyle(selectors[selector]['marker'])
-                graph.SetMarkerColor(selectors[selector]['color'])
-                graph.SetMarkerSize(1.5)
-                graph.Draw("P same")
+                                nBkgSelected[muonSimType][name] += 1
+    
+                    # Evaluate ROCs
+                    for name,iROC in ROC[muonSimType].items():
+                        for i in range(len(iROC['values'])):
+                            passed = False
+                            if name == 'LeptonMVA':
+                                passed = LeptonMVA(muon,iROC['values'][i])
+                            elif name == 'SoftMVA':
+                                passed = muon.softMvaValue() > iROC['values'][i]
+                            elif name == 'TightID + PFIso':
+                                passed = muon.passed(ROOT.reco.Muon.CutBasedIdTight) and (pfIsolation(muon) < iROC['values'][i])
+                            elif name == 'MediumPromptID + TkIso':
+                                passed = muon.passed(ROOT.reco.Muon.CutBasedIdMediumPrompt) and (tkIsolation(muon) < iROC['values'][i])
+    
+                            if passed:
+                                if trueMuon:
+                                    iROC['effSig'][i] += 1
+                                else:
+                                    iROC['effBkg'][i] += 1
+    
+            nevents += 1
+    
+        print "Processed %d events" % nevents
+    
+        allEffBkg = np.empty(0)
+        for muonSimType in muonSimTypes:
+            print "N signal (%s) muons: %d" % (muonSimType, nSigTotal[muonSimType])
+            print "N background muons: %d" % (nBkgTotal[muonSimType])
+    
+            if not nSigTotal[muonSimType]:
+                print "WARNING: No signal (%s) muons (nSigTotal == %d) for %s" % (muonSimType, nSigTotal[muonSimType], label)
+                continue
+            if not nBkgTotal[muonSimType]:
+                print "WARNING: No background muons (nBkgTotal == %d) for %s" % (nBkgTotal[muonSimType], label)
+                continue
+    
+            # Normalization
+            for name, iROC in ROC[muonSimType].items():
+                iROC['effSig'] /= nSigTotal[muonSimType]
+                iROC['effBkg'] /= nBkgTotal[muonSimType]
+    
+                allEffBkg = np.append(allEffBkg, np.amax(iROC['effBkg']) )
+    
+        effBkgMax = np.amax(allEffBkg)
+        print "\nDrawing graphs for %s" % label
+    
+        c1 = ROOT.TCanvas("c1", "ROC curve", 700,700)
+        c1.SetLeftMargin(0.15)
+    
+        colorOffset = ROOT.kBlack
+    
+        for muonSimType in muonSimTypes:
+            c1.Clear()
+            graphs = []
+    
+            # ROC graphs
+            nGraph = 0
+            for name,iROC in ROC[muonSimType].items():
+                nGraph += 1
+                color = colorOffset + nGraph
+                # apparently yellow is not kYellow but kYellow/100 +1
+                if color >= (ROOT.kYellow/100 +1): color += 1
+                graph = ROOT.TGraph(len(iROC['values']), iROC['effBkg'], iROC['effSig'])
+                graph.SetTitle(name) # see definition of 'passed'
+                graph.SetLineColor(color)
+                graph.SetLineWidth(3)
+                if nGraph == 1:
+                    graph.SetMinimum(0)
+                    graph.SetMaximum(1)
+                    graph.Draw("AC")
+                    graph.GetXaxis().SetTitle("Background efficiency")
+                    graph.GetYaxis().SetTitle("Signal ("+muonSimType+") efficiency")
+                    graph.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
+                else:
+                    graph.Draw("C same")
                 graphs.append(graph)
-
-            print "\t\n%s for %s" % (selector, muonSimType)
-            print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[muonSimType][selector],100.*effS)
-            print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[muonSimType][selector],100.*effB)
-
-        c1.Update()
-
-        legY1 = 0.25
-        legLine = 0.03
-        c1.BuildLegend(0.5, legY1, 0.95, legY1 + legLine*len(graphs))
-
-        #c1.SetTitle(study) # gets overridden by TGraph title
-        # still does not work
-        ##gStyle->SetOptTitle(0);
-        #style = ROOT.TStyle()
-        #style.SetOptTitle(0);
-        #style.UseCurrentStyle()
-        #c1.Update()
-
-        canvasTitle = ROOT.TPaveLabel(0.1, 0.92, 0.9, 0.99, study, "NDC")
-        canvasTitle.SetFillColor(ROOT.kWhite)
-        canvasTitle.SetBorderSize(1)
-        canvasTitle.SetLineColor(0)
-        canvasTitle.Draw();
-
-        # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
-        path = "plots/ROCs_"+CMSSW
-        print_canvas(c1, info['name']+'_'+muonSimType, path)
-        # raw_input( ' ... ' )
-
-    print "Finish processing %s\n" % label
+    
+            # Single point graphs
+            for selector in sorted(selectors):
+                effS = float(nSigSelected[muonSimType][selector]) / nSigTotal[muonSimType]
+                effB = float(nBkgSelected[muonSimType][selector]) / nBkgTotal[muonSimType]
+                if selectors[selector]['display']:
+                    effSigArray = array("f",[effS])
+                    effBkgArray = array("f",[effB])
+                    graph = ROOT.TGraph(len(effSigArray), effBkgArray, effSigArray)
+                    graph.SetTitle(selector)
+                    graph.SetMarkerStyle(selectors[selector]['marker'])
+                    graph.SetMarkerColor(selectors[selector]['color'])
+                    graph.SetMarkerSize(1.5)
+                    graph.Draw("P same")
+                    graphs.append(graph)
+    
+                print "\t\n%s for %s" % (selector, muonSimType)
+                print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[muonSimType][selector],100.*effS)
+                print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[muonSimType][selector],100.*effB)
+    
+            c1.Update()
+    
+            legY1 = 0.25
+            legLine = 0.03
+            c1.BuildLegend(0.5, legY1, 0.95, legY1 + legLine*len(graphs))
+    
+            #c1.SetTitle(study) # gets overridden by TGraph title
+            # still does not work
+            ##gStyle->SetOptTitle(0);
+            #style = ROOT.TStyle()
+            #style.SetOptTitle(0);
+            #style.UseCurrentStyle()
+            #c1.Update()
+    
+            canvasTitle = ROOT.TPaveLabel(0.1, 0.92, 0.9, 0.99, label, "NDC")
+            canvasTitle.SetFillColor(ROOT.kWhite)
+            canvasTitle.SetBorderSize(1)
+            canvasTitle.SetLineColor(0)
+            canvasTitle.Draw();
+    
+            # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
+            path = "plots/ROCs_"+CMSSW
+            print_canvas(c1, info['name']+'_'+analysis+'_'+muonSimType, path)
+            # raw_input( ' ... ' )
+    
+        print "Finish processing %s\n" % label
