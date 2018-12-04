@@ -470,7 +470,7 @@ for study,info in studies.items():
         canvasTitle.Draw();
 
         # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
-        path = "ROCs_"+CMSSW
+        path = "plots/ROCs_"+CMSSW
         print_canvas(c1, info['name']+'_'+muonSimType, path)
         # raw_input( ' ... ' )
 
