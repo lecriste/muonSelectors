@@ -18,6 +18,7 @@ import numpy as np
 #CMSSW = '9_4_0_pre3'
 #CMSSW = '10_2_2'
 CMSSW = '10_3_0_pre4'
+CMSSW = '10_2_5'
 
 RelValQCD = 'RelValQCD_FlatPt_15_3000HS_13'
 # dataset: /RelValTTbar_13/CMSSW_'+CMSSW+'-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/MINIAODSIM
@@ -153,8 +154,16 @@ studies = {
             },
         'maxBkgEff':0.015,
         'name':'qcd_zmm'
+        },
+    'J/#psi -> mu mu':{
+        'files':{
+            '10_2_5':open("JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-AODSIM__existing.txt").readlines()
+            },
+        'maxBkgEff':0.15,
+        'name':'JPsiToMuMu'
         }
     }
+
 
 muonHandle, muonLabel = Handle("std::vector<pat::Muon>"), "slimmedMuons"
 
@@ -215,7 +224,9 @@ selectors = {
         },
     'SoftCutBasedId':{
         'mask':ROOT.reco.Muon.SoftCutBasedId,
-        'display':False
+        'display':True,
+        'marker':20,
+        'color':ROOT.kBlack
         },
     'MVALoose ID':{
         'mask':ROOT.reco.Muon.MvaLoose,
@@ -269,6 +280,7 @@ preSelection = {'BPH-16-004':{'minPt':4.0, 'maxPt':bigNumber, 'minEta':-1.4, 'ma
 
 n_events_limit = None
 #n_events_limit = 10000*2
+n_events_limit = 9000
 
 for study,info in studies.items():
     #if not 'bar' in study: continue
@@ -276,7 +288,11 @@ for study,info in studies.items():
     print "\nProcessing %s" % dataset
 
     maxBkgEff = info['maxBkgEff']
-    files = info['files'][CMSSW]
+    if CMSSW in info['files']:
+        files = info['files'][CMSSW]
+    else:
+        print "No %s in %s dictionary, skipping it" % (CMSSW, study)
+        continue
     print "\nNumber of input files: %d" % len(files)
     if not len(files):
         print "No input files provided for %s" % dataset
