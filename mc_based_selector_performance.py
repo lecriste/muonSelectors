@@ -263,10 +263,12 @@ selectors = {
 
 bigNumber = 1e9
 preSelection = {'BPH-16-004':{'minPt':4.0, 'maxPt':bigNumber, 'minEta':-1.4, 'maxEta':1.4},
-                'BPH-18-002':{'minPt':2.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4}}
+                'BPH-18-002':{'minPt':2.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4},
+                'BPH-15-005':{'minPt':3.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4},
+               }
 
 n_events_limit = None
-n_events_limit = 10000*2
+#n_events_limit = 10000*2
 
 for study,info in studies.items():
     #if not 'bar' in study: continue
