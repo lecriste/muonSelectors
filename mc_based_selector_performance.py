@@ -18,7 +18,8 @@ import numpy as np
 #CMSSW = '9_4_0_pre3'
 #CMSSW = '10_2_2'
 #CMSSW = '10_3_0_pre4'
-CMSSW = '10_2_5'
+#CMSSW = '10_2_5'
+CMSSW = '10_2_X'
 
 RelValQCD = 'RelValQCD_FlatPt_15_3000HS_13'
 # dataset: /RelValTTbar_13/CMSSW_'+CMSSW+'-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1/MINIAODSIM
@@ -80,11 +81,13 @@ studies = {
                 # through AAA
                 open(inputDatasets+"RelValTTbar_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50_v1-MINIAODSIM.txt").readlines(),
             '10_2_2':[# on disk 
-                # TTbar
                 # cannot use FastSim because muon.simType()==ROOT.reco.MatchedPrimaryMuon would not work
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/5858CF63-1B9E-E811-B34F-0025905A610C.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_FastSim-v2/10000/E666A4CB-A19D-E811-94ED-0025905A60DE.root'
                 ],
+            '10_2_X':# on disk
+                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/TTbar/store+relval+CMSSW_10_2_3+RelValTTbar_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+4450FAD5-0D6F-5F48-A92C-F49D4F57E41C.root',
+                '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/TTbar/store+relval+CMSSW_10_2_3+RelValTTbar_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+3EB3F65D-3167-2243-8F1D-27F3EB0EC7A3.root'],
             '10_3_0_pre4':[
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/6B898672-0B4B-184C-95DA-153402FCBAE9.root'
                 ]
@@ -96,9 +99,9 @@ studies = {
         'files':{
             '9_4_0_pre3':
                 # ZMM
-                #open(inputDatasets+"RelValZMM_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1-MINIAODSIM-dmytro.txt").readlines(),
+                #open(inputDatasets+"RelValZMM_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1-MINIAODSIM-dmytro.txt").readlines() +
                 # through AAA
-                open(inputDatasets+"RelValZMM_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1-MINIAODSIM.txt").readlines(),
+                open(inputDatasets+"RelValZMM_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1-MINIAODSIM.txt").readlines() +
                 # QCD
                 #open(inputDatasets+"RelValQCD_13-PU25ns_94X_mc2017_realistic_PixFailScenario_IDEAL_HS_AVE50-v1-MINIAODSIM-dmytro.txt").readlines(),
                 # through AAA
@@ -124,6 +127,17 @@ studies = {
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/D0721909-4D8B-E811-8811-0CC47A78A3E8.root',
                 #'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_102X_mcRun2_asymptotic_v3_gcc7_FastSim-v1/10000/8A7EF76C-F689-E811-8B3B-0CC47A7C3424.root'
                 ],
+            '10_2_X':# on disk
+                # QCD
+                #open(inputDatasets+"RelValQCD_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM.txt").readlines() +
+                #open(inputDatasets+"RelValQCD_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM-eos.txt").readlines() +
+                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+ED9C0915-AA68-B24B-A58E-384A77B92C0B.root',
+                 '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+D2095950-820E-C44D-81D6-D6F788E8B9F9.root',
+                 '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+B3F49B1B-E494-EB4E-A88B-D7D6739BBC65.root'] +
+                # ZMM
+                #open(inputDatasets+"RelValZMM_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM.txt").readlines(),
+                #open(inputDatasets+"RelValZMM_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM-eos.txt").readlines(),
+                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/ZMM/store+relval+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+0D2FD4D8-689C-084F-A265-505BABF8D26F.root'],
             '10_3_0_pre4':[
                 # QCD
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/528B2B26-F3B2-8249-A2DE-541D3FEB03F3.root',
@@ -133,9 +147,18 @@ studies = {
         'maxBkgEff':0.015,
         'name':'qcd_zmm'
         },
-    'J/#psi -> mu mu':{
+    'J/#psi -> #mu#mu':{
         'files':{
-            '10_2_5':open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-AODSIM.txt").readlines()
+            '10_2_X':
+                # AODSIM
+                #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-AODSIM.txt").readlines()
+                #['/eos/cms/store/user/lecriste/muonSelectors/AODSIM/store+mc+RunIIAutumn18DR+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+AODSIM+PUAvg50ForMUOVal_102X_upgrade2018_realistic_v15-v2+90001+FD1B7E39-EBD0-AB4F-A8F1-B0FF2C232CCB.root',
+                #'/eos/cms/store/user/lecriste/muonSelectors/AODSIM/store+mc+RunIIAutumn18DR+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+AODSIM+PUAvg50ForMUOVal_102X_]
+                # MiniAODSIM
+                #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-MINIAODSIM.txt").readlines()
+                #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-MINIAODSIM-eos.txt").readlines()
+                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE27B4EF-BB0C-F94F-8FFA-34ACC0934406.root',
+                '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE663B04-41AE-7F42-892C-22891454BB2C.root']
             },
         'maxBkgEff':0.15,
         'name':'JPsiToMuMu'
@@ -178,6 +201,11 @@ def tkIsolation(muon):
 def print_canvas(canvas, output_name_without_extention, path):
     if not os.path.exists(path):
         os.makedirs(path)
+    format_canvas(canvas, output_name_without_extention, path)
+    canvas.SetLogx()
+    format_canvas(canvas, output_name_without_extention+'-log', path)
+
+def format_canvas(canvas, output_name_without_extention, path):
     canvas.Print("%s/%s.png" % (path,output_name_without_extention))
     canvas.Print("%s/%s.pdf" % (path,output_name_without_extention))
     canvas.Print("%s/%s.root"% (path,output_name_without_extention))
@@ -258,10 +286,11 @@ preSelection = {'BPH-16-004':{'minPt':4.0, 'maxPt':bigNumber, 'minEta':-1.4, 'ma
 
 n_events_limit = None
 #n_events_limit = 10000*2
-n_events_limit = 9000
+#n_events_limit = 9000
+n_events_limit = 50000
 
 for study,info in studies.items():
-    #if not 'bar' in study: continue
+    #if not 'psi' in study: continue
     dataset = CMSSW + ' ' + study
     print "\nProcessing %s" % dataset
 
@@ -329,8 +358,13 @@ for study,info in studies.items():
             if nevents >= maxEvents: break
             if (nevents+1) % max(1,maxEvents/10) == 0: print "Processing event", nevents+1
     
-            event.getByLabel(muonLabel, muonHandle)
-            muons = muonHandle.product()
+            try:
+                event.getByLabel(muonLabel, muonHandle)
+                muons = muonHandle.product()
+            except RuntimeError as ex:
+                print(ex)
+                break
+
             # Loop over muons
             for muon in muons:
     
@@ -407,6 +441,12 @@ for study,info in studies.items():
         colorOffset = ROOT.kBlack
     
         for muonSimType in muonSimTypes:
+            if not nSigTotal[muonSimType]:
+                print "WARNING: No signal (%s) muons (nSigTotal == %d) for %s" % (muonSimType, nSigTotal[muonSimType], label)
+                continue
+            if not nBkgTotal[muonSimType]:
+                print "WARNING: No background muons (nBkgTotal == %d) for %s" % (nBkgTotal[muonSimType], label)
+                continue
             c1.Clear()
             graphs = []
     

@@ -1,0 +1,1 @@
+'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/ZMM/store+relval+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+0D2FD4D8-689C-084F-A265-505BABF8D26F.root'

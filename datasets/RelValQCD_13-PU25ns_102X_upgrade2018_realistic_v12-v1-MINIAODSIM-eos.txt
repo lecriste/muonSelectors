@@ -1,0 +1,3 @@
+'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+ED9C0915-AA68-B24B-A58E-384A77B92C0B.root'
+'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+D2095950-820E-C44D-81D6-D6F788E8B9F9.root'
+'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/QCD/store+relval+CMSSW_10_2_3+RelValQCD_FlatPt_15_3000HS_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+B3F49B1B-E494-EB4E-A88B-D7D6739BBC65.root'
