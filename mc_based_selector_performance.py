@@ -87,7 +87,7 @@ studies = {
                 ],
             '10_2_X':# on disk
                 ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/TTbar/store+relval+CMSSW_10_2_3+RelValTTbar_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+4450FAD5-0D6F-5F48-A92C-F49D4F57E41C.root',
-                '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/TTbar/store+relval+CMSSW_10_2_3+RelValTTbar_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+3EB3F65D-3167-2243-8F1D-27F3EB0EC7A3.root'],
+                 '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/TTbar/store+relval+CMSSW_10_2_3+RelValTTbar_13+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+3EB3F65D-3167-2243-8F1D-27F3EB0EC7A3.root'],
             '10_3_0_pre4':[
                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/RelValTTbar_13/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/6B898672-0B4B-184C-95DA-153402FCBAE9.root'
                 ]
@@ -138,11 +138,10 @@ studies = {
                 #open(inputDatasets+"RelValZMM_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM.txt").readlines(),
                 #open(inputDatasets+"RelValZMM_13-PU25ns_102X_upgrade2018_realistic_v12-v1-MINIAODSIM-eos.txt").readlines(),
                 ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/ZMM/store+relval+MINIAODSIM+102X_upgrade2018_realistic_v12-v1+20000+0D2FD4D8-689C-084F-A265-505BABF8D26F.root'],
-            '10_3_0_pre4':[
+            '10_3_0_pre4':
                 # QCD
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/528B2B26-F3B2-8249-A2DE-541D3FEB03F3.root',
-                'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/9860357D-F043-B24E-BD2E-A5B0BEF477AE.root',
-                ],
+                ['root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/528B2B26-F3B2-8249-A2DE-541D3FEB03F3.root',
+                 'root://'+redirector+'//store/relval/CMSSW_'+CMSSW+'/'+RelValQCD+'/MINIAODSIM/PU25ns_103X_mcRun2_asymptotic_v1-v1/10000/9860357D-F043-B24E-BD2E-A5B0BEF477AE.root'],
             },
         'maxBkgEff':0.015,
         'name':'qcd_zmm'
@@ -198,21 +197,26 @@ def pfIsolation(muon):
 def tkIsolation(muon):
     return muon.isolationR03().sumPt/muon.pt()
 
+def binomialErr(eff, N):
+    return sqrt(eff*(1 - eff)/N) if N else 0
+
 def print_canvas(canvas, output_name_without_extention, path):
     if not os.path.exists(path):
         os.makedirs(path)
+    canvas.SetLogx(0)
     format_canvas(canvas, output_name_without_extention, path)
-    canvas.SetLogx()
+    canvas.SetLogx(1)
     format_canvas(canvas, output_name_without_extention+'-log', path)
 
 def format_canvas(canvas, output_name_without_extention, path):
     canvas.Print("%s/%s.png" % (path,output_name_without_extention))
     canvas.Print("%s/%s.pdf" % (path,output_name_without_extention))
-    canvas.Print("%s/%s.root"% (path,output_name_without_extention))
+    if '-log' not in output_name_without_extention:
+        canvas.Print("%s/%s.root"% (path,output_name_without_extention))
 
 # https://github.com/cms-sw/cmssw/blob/387393ddf3bc9ff50c532bb1dec288f180e64796/DataFormats/MuonReco/interface/MuonSimInfo.h#L31
 muonSimTypes = {'MatchedPrimaryMuon': 4, 'MatchedMuonFromHeavyFlavour': 3}
-extendedMuonSimType = {'MatchedMuonFromB': 8}
+extendedMuonSimType = {'MatchedMuonFromB': 8, 'MatchedMuonFromBtoC': 7, 'MatchedMuonFromC': 6}
 muonSimTypes.update(extendedMuonSimType)
 
 selectors = {
@@ -318,8 +322,12 @@ for study,info in studies.items():
         label = analysis + ' from ' + CMSSW + ' ' + study
 
         print "\nProcessing %s with %s pre-selection:" % (dataset, analysis)
-        print "%.2f\t< pT(muon) [GeV]\t< %.2f" % (cuts['minPt'],  cuts['maxPt'])
-        print "%.2f\t< eta(muon)\t\t< %.2f"    % (cuts['minEta'], cuts['maxEta'])
+        muonPtCut = "%.2f\t< pT(muon) [GeV]\t< %.2f" % (cuts['minPt'],  cuts['maxPt'])
+        muonPtCutText = "%.1f < p_{T}(#mu) < %.1f" % (cuts['minPt'],  cuts['maxPt']) if cuts['maxPt'] != bigNumber else "p_{T}(#mu) > %.1f" % cuts['minPt']
+        print muonPtCut
+        muonEtaCut = "%.2f\t< eta(muon)\t\t< %.2f" % (cuts['minEta'], cuts['maxEta'])
+        muonEtaCutText = "%.1f < #eta (#mu) < %.1f" % (cuts['minEta'], cuts['maxEta']) if cuts['minEta'] != cuts['minEta'] else "|#eta (#mu)| < %.1f" % cuts['maxEta']
+        print muonEtaCut
 
         nevents = 0
         nSigTotal = {}
@@ -464,10 +472,11 @@ for study,info in studies.items():
                 if nGraph == 1:
                     graph.SetMinimum(0)
                     graph.SetMaximum(1)
+                    #graph.GetXaxis().SetLimits(0.01, max(maxBkgEff, 0.02 + effBkgMax));
+                    graph.GetXaxis().SetLimits(0.01, 1);
                     graph.Draw("AC")
                     graph.GetXaxis().SetTitle("Background efficiency")
                     graph.GetYaxis().SetTitle("Signal ("+muonSimType+") efficiency")
-                    graph.GetXaxis().SetLimits(0, max(maxBkgEff, 0.02 + effBkgMax));
                 else:
                     graph.Draw("C same")
                 graphs.append(graph)
@@ -475,11 +484,15 @@ for study,info in studies.items():
             # Single point graphs
             for selector in sorted(selectors):
                 effS = float(nSigSelected[muonSimType][selector]) / nSigTotal[muonSimType]
+                effS_err = binomialErr(effS, nSigTotal[muonSimType])
                 effB = float(nBkgSelected[muonSimType][selector]) / nBkgTotal[muonSimType]
+                effB_err = binomialErr(effB, nBkgTotal[muonSimType])
                 if selectors[selector]['display']:
                     effSigArray = array("f",[effS])
+                    effSig_errArray = array("f",[effS_err])
                     effBkgArray = array("f",[effB])
-                    graph = ROOT.TGraph(len(effSigArray), effBkgArray, effSigArray)
+                    effBkg_errArray = array("f",[effB_err])
+                    graph = ROOT.TGraphAsymmErrors(len(effSigArray), effBkgArray, effSigArray, effBkg_errArray, effBkg_errArray, effSig_errArray, effSig_errArray)
                     graph.SetTitle(selector)
                     graph.SetMarkerStyle(selectors[selector]['marker'])
                     graph.SetMarkerColor(selectors[selector]['color'])
@@ -488,14 +501,20 @@ for study,info in studies.items():
                     graphs.append(graph)
     
                 print "\t\n%s for %s" % (selector, muonSimType)
-                print "\t\tSig: N:%d (%0.2f%%)" % (nSigSelected[muonSimType][selector],100.*effS)
-                print "\t\tBkg: N:%d (%0.2f%%)" % (nBkgSelected[muonSimType][selector],100.*effB)
+                print "\t\tSig #: %d\t(%0.2f%% +/- %0.2f%%)" % (nSigSelected[muonSimType][selector], 100.*effS, 100*effS_err)
+                print "\t\tBkg #: %d\t(%0.2f%% +/- %0.2f%%)" % (nBkgSelected[muonSimType][selector], 100.*effB, 100*effB_err)
     
             c1.Update()
-    
-            legY1 = 0.25
+
+            legX1 = 0.55
+            legX2 = 0.99
+            legY1 = 0.15
             legLine = 0.03
-            c1.BuildLegend(0.5, legY1, 0.95, legY1 + legLine*len(graphs))
+            legY2 = legY1 + legLine*len(graphs)
+            c1.BuildLegend(legX1, legY1, legX2, legY2)
+
+            preSelX1 = legX1 + (legX2-legX1)/3
+            preSelX2 = legX1 + 2*(legX2-legX1)/3
     
             #c1.SetTitle(study) # gets overridden by TGraph title
             # still does not work
@@ -505,11 +524,21 @@ for study,info in studies.items():
             #style.UseCurrentStyle()
             #c1.Update()
     
-            canvasTitle = ROOT.TPaveLabel(0.1, 0.92, 0.9, 0.99, label, "NDC")
+            canvasTitle = ROOT.TPaveLabel(0.1, 0.92, 0.9, 0.99, label.replace("->","#rightarrow"), "NDC")
             canvasTitle.SetFillColor(ROOT.kWhite)
             canvasTitle.SetBorderSize(1)
             canvasTitle.SetLineColor(0)
             canvasTitle.Draw();
+
+            legY2 += 0.01
+            preSelection_pave = ROOT.TPaveText(preSelX1, legY2, preSelX2, legY2 + legLine*3, "NDC")
+            preSelection_pave.AddText(analysis)
+            preSelection_pave.AddText(muonPtCutText)
+            preSelection_pave.AddText(muonEtaCutText)
+            preSelection_pave.SetFillColor(ROOT.kWhite)
+            preSelection_pave.SetBorderSize(1)
+            preSelection_pave.SetLineColor(1)
+            preSelection_pave.Draw();
     
             # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
             path = "plots/ROCs_"+CMSSW
