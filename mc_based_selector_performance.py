@@ -204,8 +204,10 @@ def print_canvas(canvas, output_name_without_extention, path):
     if not os.path.exists(path):
         os.makedirs(path)
     canvas.SetLogx(0)
+    canvas.SetLogy(0)
     format_canvas(canvas, output_name_without_extention, path)
     canvas.SetLogx(1)
+    canvas.SetLogy(1)
     format_canvas(canvas, output_name_without_extention+'-log', path)
 
 def format_canvas(canvas, output_name_without_extention, path):
@@ -470,7 +472,7 @@ for study,info in studies.items():
                 graph.SetLineColor(color)
                 graph.SetLineWidth(3)
                 if nGraph == 1:
-                    graph.SetMinimum(0)
+                    graph.SetMinimum(0.01)
                     graph.SetMaximum(1)
                     #graph.GetXaxis().SetLimits(0.01, max(maxBkgEff, 0.02 + effBkgMax));
                     graph.GetXaxis().SetLimits(0.01, 1);
@@ -504,6 +506,7 @@ for study,info in studies.items():
                 print "\t\tSig #: %d\t(%0.2f%% +/- %0.2f%%)" % (nSigSelected[muonSimType][selector], 100.*effS, 100*effS_err)
                 print "\t\tBkg #: %d\t(%0.2f%% +/- %0.2f%%)" % (nBkgSelected[muonSimType][selector], 100.*effB, 100*effB_err)
     
+            c1.SetGrid()
             c1.Update()
 
             legX1 = 0.55
@@ -541,8 +544,9 @@ for study,info in studies.items():
             preSelection_pave.Draw();
     
             # path = "/eos/user/d/dmytro/www/plots/"+CMSSW+"_ROCs/"
-            path = "plots/ROCs_"+CMSSW
-            print_canvas(c1, info['name']+'_'+analysis+'_'+muonSimType, path)
+            path = "plots/ROCs_"+CMSSW+"/"+analysis
+            print_canvas(c1, info['name']+'_'+muonSimType, path)
             # raw_input( ' ... ' )
-    
+
+        # end of for muonSimType in muonSimTypes:
         print "Finish processing %s\n" % label
