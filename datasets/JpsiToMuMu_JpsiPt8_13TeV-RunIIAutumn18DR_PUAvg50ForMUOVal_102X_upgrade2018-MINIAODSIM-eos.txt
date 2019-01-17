@@ -1,2 +1,1 @@
-'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE27B4EF-BB0C-F94F-8FFA-34ACC0934406.root'
-'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE663B04-41AE-7F42-892C-22891454BB2C.root'
+'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/ForMUOVal/JpsiToMuMu/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+PUAvg50+102X_upgrade2018_realistic_v15-v1+90000+FF849E84-E9A2-544B-86A9-DA963C26EF9D.root'

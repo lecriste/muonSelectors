@@ -154,10 +154,12 @@ studies = {
                 #['/eos/cms/store/user/lecriste/muonSelectors/AODSIM/store+mc+RunIIAutumn18DR+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+AODSIM+PUAvg50ForMUOVal_102X_upgrade2018_realistic_v15-v2+90001+FD1B7E39-EBD0-AB4F-A8F1-B0FF2C232CCB.root',
                 #'/eos/cms/store/user/lecriste/muonSelectors/AODSIM/store+mc+RunIIAutumn18DR+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+AODSIM+PUAvg50ForMUOVal_102X_]
                 # MiniAODSIM
-                #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-MINIAODSIM.txt").readlines()
+                #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18MiniAOD_102X_upgrade2018-MINIAODSIM.txt").readlines()
+                #['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE27B4EF-BB0C-F94F-8FFA-34ACC0934406.root',
+                #'/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE663B04-41AE-7F42-892C-22891454BB2C.root']
+                # ForMUOVal
                 #open(inputDatasets+"JpsiToMuMu_JpsiPt8_13TeV-RunIIAutumn18DR_PUAvg50ForMUOVal_102X_upgrade2018-MINIAODSIM-eos.txt").readlines()
-                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE27B4EF-BB0C-F94F-8FFA-34ACC0934406.root',
-                '/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+102X_upgrade2018_realistic_v15-v1+270000+FE663B04-41AE-7F42-892C-22891454BB2C.root']
+                ['/eos/cms/store/user/lecriste/muonSelectors/MiniAODSIM/ForMUOVal/JpsiToMuMu/store+mc+RunIIAutumn18MiniAOD+JpsiToMuMu_JpsiPt8_TuneCP5_13TeV-pythia8+MINIAODSIM+PUAvg50+102X_upgrade2018_realistic_v15-v1+90000+FF849E84-E9A2-544B-86A9-DA963C26EF9D.root']
             },
         'maxBkgEff':0.15,
         'name':'JPsiToMuMu'
@@ -224,15 +226,21 @@ muonSimTypes.update(extendedMuonSimType)
 selectors = {
     'CutBasedIdLoose':{
         'mask':ROOT.reco.Muon.CutBasedIdLoose,
-        'display':False
+        'display':True,
+        'marker':25,
+        'color':ROOT.kBlack
         },
     'CutBasedIdMediumPrompt':{
         'mask':ROOT.reco.Muon.CutBasedIdMediumPrompt,
-        'display':False
+        'display':True,
+        'marker':32,
+        'color':ROOT.kBlack
         },
     'CutBasedIdTight':{
         'mask':ROOT.reco.Muon.CutBasedIdTight,
-        'display':False
+        'display':True,
+        'marker':26,
+        'color':ROOT.kBlack
         },
     'SoftCutBasedId':{
         'mask':ROOT.reco.Muon.SoftCutBasedId,
@@ -288,6 +296,7 @@ bigNumber = 1e9
 preSelection = {'BPH-16-004':{'minPt':4.0, 'maxPt':bigNumber, 'minEta':-1.4, 'maxEta':1.4},
                 'BPH-18-002':{'minPt':2.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4},
                 'BPH-15-005':{'minPt':3.5, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4},
+                'BPH-17-003':{'minPt':1.0, 'maxPt':bigNumber, 'minEta':-2.4, 'maxEta':2.4},
                }
 
 n_events_limit = None
@@ -321,6 +330,7 @@ for study,info in studies.items():
 
 
     for analysis,cuts in preSelection.items():
+        #if not 'BPH-18-002' in analysis: continue
         label = analysis + ' from ' + CMSSW + ' ' + study
 
         print "\nProcessing %s with %s pre-selection:" % (dataset, analysis)
